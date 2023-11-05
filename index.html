@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Online Library Management System</title>
+   <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+      background-color: antiquewhite;
+    }
+
+    .container {
+      display: flex;
+      max-width: 1200px;
+      width: 100%;
+      background-color:goldenrod;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+    .column {
+      flex: 1;
+      padding: 20px;
+      border: 1px black;
+    }
+
+    .column h2 {
+      text-align: center;
+      border: 1px black;
+    }
+
+    .column ul {
+      list-style: none;
+      padding: 0;
+      border:1px black;
+    }
+
+    .column li {
+      border: 1px solid black;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 5px 0;
+      background-color:violet;
+    }
+
+    .addbook {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .addbook input {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .searchbook {
+        display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .searchbook input {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover{
+        background-color: gray;
+    }
+  </style>
+</head>
+<body>
+  <h1>Online Library Management System</h1>
+  <div class="container">
+    <div class="column">
+      <h2>Book List</h2>
+      <ul id="bookList"></ul>
+    </div>
+    <div class="column">
+      <h2>Add New Book</h2>
+      <div class="addbook">
+        <input type="text" id="bookTitle" placeholder="Title" >
+        <input type="text" id="bookAuthor" placeholder="Author">
+        <input type="number" id="bookISBN" placeholder="ISBN">
+        <button onclick="addBook()">Add Book</button>
+      </div>
+    </div>
+    <div class="column" >
+      <h2>Search Books</h2>
+      <div class="searchbook" >
+        <input type="text" id="searchInput" onkeyup="searchBooks()" placeholder="Enter Book Title ">
+        <button onclick="searchBooks() ">Search</button>
+       </div>
+  </div>
+  </div>
+  
+  <script>
+    let books = [];
+
+    function addBook() {
+      const title = document.getElementById("bookTitle").value;
+      const author = document.getElementById("bookAuthor").value;
+      const isbn = document.getElementById("bookISBN").value;
+
+      if (title && author&&isbn) {
+        // Check for duplicates
+        const isDuplicateIsbn = books.some(book => book.isbn.toLowerCase() === isbn.toLowerCase());
+        const isDuplicate = books.some(book => 
+          book.title.toLowerCase() === title.toLowerCase() && 
+          book.author.toLowerCase() === author.toLowerCase()
+        );
+
+        if (!isDuplicateIsbn && !isDuplicate) {
+          const book = { title, author, isbn };
+          books.push(book);
+          displayBookList();
+          clearInputFields();
+        } else {
+          alert("Thegiven book is present in Library");
+        }
+      }
+    }
+
+    function displayBookList() {
+  const bookList = document.getElementById("bookList");
+  bookList.innerHTML = "";
+
+  books.forEach((book, index) => {
+    const listItem = document.createElement("li");
+    listItem.textContent = Book ${index + 1}: Title - ${book.title}, Author - ${book.author}, ISBN - ${book.isbn};
+    bookList.appendChild(listItem);
+  });
+}
+function searchBooks() {
+  const searchInput = document.getElementById("searchInput").value.toLowerCase();
+  const searchResults = document.getElementById("bookList");
+  searchResults.innerHTML = "";
+
+  books.forEach((book, index) => {
+    if (
+      book.title.toLowerCase().includes(searchInput) ||
+      book.author.toLowerCase().includes(searchInput) ||
+      book.isbn.toLowerCase().includes(searchInput)
+    ) {
+      const listItem = document.createElement("li");
+      listItem.textContent = Book ${index + 1}: Title - ${book.title}, Author - ${book.author}, ISBN - ${book.isbn};
+      searchResults.appendChild(listItem);
+    }
+  });
+}
+
+    function clearInputFields() {
+      document.getElementById("bookTitle").value = "";
+      document.getElementById("bookAuthor").value = "";
+      document.getElementById("bookISBN").value = "";
+    }
+  </script>
+</body>
+</html>
